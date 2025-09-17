@@ -30,11 +30,15 @@ const orderSchema = new mongoose.Schema({
   },
   custom_order_id: {
     type: String,
-    unique: true
+    // uniqueness enforced via schema.index below
   }
 }, {
   timestamps: true
 });
+
+// Indexes for performance
+orderSchema.index({ school_id: 1 });
+orderSchema.index({ custom_order_id: 1 }, { unique: true });
 
 // Generate custom order ID before saving
 orderSchema.pre('save', async function(next) {

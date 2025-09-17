@@ -6,6 +6,19 @@ const connectDB = require('./config/database');
 
 // Load env vars
 dotenv.config();
+// Ensure critical env vars
+if (!process.env.JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET is not defined in environment');
+  process.exit(1);
+}
+// Ensure payment env vars
+const requiredPaymentVars = ['PAYMENT_BASE_URL', 'PAYMENT_API_KEY', 'PG_KEY', 'SCHOOL_ID'];
+for (const key of requiredPaymentVars) {
+  if (!process.env[key]) {
+    console.error(`FATAL: ${key} is not defined in environment`);
+    process.exit(1);
+  }
+}
 
 // Connect to database
 connectDB();

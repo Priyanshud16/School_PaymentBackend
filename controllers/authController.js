@@ -27,19 +27,15 @@ exports.register = async (req, res) => {
     // Generate token
     const token = generateToken(user._id);
 
-    // Return response
+    // Return response (flattened)
     res.status(201).json({
-      success: true,
-      message: 'User registered successfully',
-      data: {
-        token,
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          school_id: user.school_id
-        }
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        school_id: user.school_id
       }
     });
   } catch (error) {
@@ -77,19 +73,15 @@ exports.login = async (req, res) => {
     // Generate token
     const token = generateToken(user._id);
 
-    // Return response
+    // Return response (flattened)
     res.status(200).json({
-      success: true,
-      message: 'Login successful',
-      data: {
-        token,
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-          school_id: user.school_id
-        }
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        school_id: user.school_id
       }
     });
   } catch (error) {

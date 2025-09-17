@@ -42,4 +42,9 @@ const orderStatusSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Indexes for performance
+orderStatusSchema.index({ collect_id: 1 });
+orderStatusSchema.index({ status: 1 });
+orderStatusSchema.index({ payment_time: -1 });
+
 module.exports = mongoose.model('OrderStatus', orderStatusSchema);

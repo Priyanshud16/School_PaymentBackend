@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const Order = require('../models/Order');
 const OrderStatus = require('../models/OrderStatus');
 
@@ -66,8 +67,13 @@ exports.getTransactionsBySchool = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
     
+    if (!mongoose.Types.ObjectId.isValid(schoolId)) {
+      return res.status(400).json({ message: 'Invalid schoolId' });
+    }
+    const schoolObjectId = new mongoose.Types.ObjectId(schoolId);
+    
     const aggregation = Order.aggregate([
-      { $match: { school_id: mongoose.Types.ObjectId(schoolId) } },
+      { $match: { school_id: schoolObjectId } },
       {
         $lookup: {
           from: 'orderstatuses',
@@ -94,7 +100,7 @@ exports.getTransactionsBySchool = async (req, res) => {
     ]);
     
     const transactions = await aggregation;
-    const total = await Order.countDocuments({ school_id: schoolId });
+    const total = await Order.countDocuments({ school_id: schoolObjectId });
     
     res.status(200).json({
       success: true,

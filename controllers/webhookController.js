@@ -1,4 +1,6 @@
 const paymentGateway = require('../utils/paymentGateway');
+const Order = require('../models/Order');
+const OrderStatus = require('../models/OrderStatus');
 
 // Handle webhook
 exports.handleWebhook = async (req, res) => {
@@ -11,8 +13,27 @@ exports.handleWebhook = async (req, res) => {
       return res.status(401).json({ message: 'Invalid signature' });
     }
 
-    // Process webhook data
-    const processedData = paymentGateway.processWebhook(webhookData);
+    // Log webhook payload
+    try {
+      const WebhookLog = require('../models/WebhookLog');
+      await WebhookLog.create({ payload: webhookData, status: String(webhookData.status), processed: false });
+    } catch (e) {
+      console.error('Failed to log webhook:', e.message);
+    }
+
+    // Process webhook payload per assignment format
+    const orderInfo = webhookData.order_info || {};
+    const processedData = {
+      order_id: orderInfo.order_id,
+      order_amount: orderInfo.order_amount,
+      transaction_amount: orderInfo.transaction_amount,
+      payment_mode: orderInfo.payment_mode,
+      bank_reference: orderInfo.bank_reference,
+      payment_message: orderInfo.Payment_message || orderInfo.payment_message,
+      status: orderInfo.status,
+      error_message: orderInfo.error_message,
+      payment_time: orderInfo.payment_time
+    };
 
     // Update database
     const order = await Order.findOne({ custom_order_id: processedData.order_id });

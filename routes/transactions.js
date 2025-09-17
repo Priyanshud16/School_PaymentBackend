@@ -11,5 +11,7 @@ const router = express.Router();
 router.route('/').get(protect, getAllTransactions);
 router.route('/school/:schoolId').get(protect, getTransactionsBySchool);
 router.route('/status/:custom_order_id').get(protect, checkTransactionStatus);
+// Alias per assignment spec
+router.route('/transaction-status/:custom_order_id').get(protect, checkTransactionStatus);
 
 module.exports = router;

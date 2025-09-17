@@ -23,12 +23,14 @@ exports.createPayment = async (req, res) => {
       gateway_name
     });
 
-    // Create order status
+    // Create order status (seed with pending values until webhook updates)
     const orderStatus = await OrderStatus.create({
       collect_id: order._id,
       order_amount,
       transaction_amount: order_amount,
-      status: 'pending'
+      status: 'pending',
+      payment_mode: 'pending',
+      payment_message: 'initiated'
     });
 
     // Prepare payment data for gateway
