@@ -1,3 +1,0 @@
-# School_PaymentBackend
-
-PpKPtbxlw8f9RzrU
